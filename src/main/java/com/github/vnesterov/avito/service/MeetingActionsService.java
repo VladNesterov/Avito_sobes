@@ -105,7 +105,7 @@ public class MeetingActionsService implements MeetingService {
 
         MeetingsEntity meetingsEntity = getMeetingsEntity(meeting, meetings);
 
-        for (MembersEntity membersQuery : members) {
+        for (MembersEntity membersQuery : meetingsEntity.getMembers()) {
             if (!membersQuery.getNamePerson().equalsIgnoreCase(nameMembers)) {
                 resultMembers.add(membersQuery);
 
