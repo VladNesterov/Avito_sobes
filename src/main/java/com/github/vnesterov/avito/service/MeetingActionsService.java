@@ -56,8 +56,6 @@ public class MeetingActionsService implements MeetingService {
 
     public String addMeetings(String meeting, Date date) {
         List<MeetingsEntity> meetings = meetingRepository.findAll();
-        List<MeetingDto> meetingDto = new ArrayList<>();
-
         for (MeetingsEntity meetingsEntityFromDataBase : meetings) {
             if (meetingsEntityFromDataBase.getMeeting().equalsIgnoreCase(meeting)) {
                 return "Meeting was not added, because a such meeting already exists";
@@ -75,7 +73,6 @@ public class MeetingActionsService implements MeetingService {
     public String addMembersToMeetings(String meeting, List<String> nameMembers) {
         List<MembersEntity> members = memberRepository.findAll();
         List<MeetingsEntity> meetings = meetingRepository.findAll();
-
         List<MembersEntity> resultMembers = new ArrayList<>();
 
         MeetingsEntity meetingsEntity = getMeetingsEntity(meeting, meetings);
@@ -135,7 +132,6 @@ public class MeetingActionsService implements MeetingService {
         }
         return meetingsEntity;
     }
-
 
 }
 
