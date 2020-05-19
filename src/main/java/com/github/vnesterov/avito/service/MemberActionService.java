@@ -6,6 +6,7 @@ import com.github.vnesterov.avito.repository.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,13 @@ public class MemberActionService implements MemberService {
         MembersEntity membersEntity = new MembersEntity();
         membersEntity.setEmail(email);
         membersEntity.setNamePerson(name);
+        List<MembersEntity> members = memberRepository.findAll();
+        for (MembersEntity membersEntity1 : members) {
+            if (membersEntity1.getNamePerson().equalsIgnoreCase(name)) {
+                return "This person already exist";
+            }
+
+        }
         memberRepository.save(membersEntity);
         return "Person was added to data base";
     }

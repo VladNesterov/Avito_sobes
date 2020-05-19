@@ -32,6 +32,7 @@ http://localhost:8100/member/delete?meeting=meeting02&name=vlad31231
 
 
 http://localhost:8100/member/add/to/database?name=vlad&email=vlad@mail.ru
+Все имена уникальны.
 Добавляет в базу данных человека, проверят его валидность. 
 По способу добавления в базу данных  можно сказать что в базе будут только валидные пользователи.
 
