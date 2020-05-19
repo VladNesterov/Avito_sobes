@@ -72,32 +72,31 @@ public class MeetingActionsService implements MeetingService {
     }
 
     @Override
-    public void addMembersToMeetings(String meeting, List<String> nameMembers) {
+    public String addMembersToMeetings(String meeting, List<String> nameMembers) {
         List<MembersEntity> members = memberRepository.findAll();
         List<MeetingsEntity> meetings = meetingRepository.findAll();
 
         List<MembersEntity> resultMembers = new ArrayList<>();
 
-        MeetingsEntity meetingsEntity = new MeetingsEntity();
-        for (MeetingsEntity membersQuery : meetings) {
-            if (membersQuery.getMeeting().equalsIgnoreCase(meeting)) {
-                meetingsEntity = membersQuery;
-                break;
-            }
-        }
+        MeetingsEntity meetingsEntity = getMeetingsEntity(meeting, meetings);
 
         resultMembers = meetingsEntity.getMembers();
-        for (MembersEntity membersQuery : members) {
-            for (int i = 0; i < nameMembers.size(); i++) {
-                if (membersQuery.getNamePerson().equalsIgnoreCase(nameMembers.get(i))) {
-                    resultMembers.add(membersQuery);
-
+        try {
+            for (MembersEntity membersQuery : members) {
+                for (int i = 0; i < nameMembers.size(); i++) {
+                    if (membersQuery.getNamePerson().equalsIgnoreCase(nameMembers.get(i))) {
+                        resultMembers.add(membersQuery);
+                    }
                 }
             }
+        } catch (NullPointerException e) {
+            return "You have to create meeting and then add members to it";
         }
+
         meetingsEntity.setMembers(resultMembers);
         meetingsEntity.setStatus("Active");
         meetingRepository.save(meetingsEntity);
+        return "Members was added to meeting";
     }
 
     @Override
@@ -107,13 +106,7 @@ public class MeetingActionsService implements MeetingService {
 
         List<MembersEntity> resultMembers = new ArrayList<>();
 
-        MeetingsEntity meetingsEntity = new MeetingsEntity();
-        for (MeetingsEntity membersQuery : meetings) {
-            if (membersQuery.getMeeting().equalsIgnoreCase(meeting)) {
-                meetingsEntity = membersQuery;
-                break;
-            }
-        }
+        MeetingsEntity meetingsEntity = getMeetingsEntity(meeting, meetings);
 
         for (MembersEntity membersQuery : members) {
             for (int i = 0; i < nameMembers.size(); i++) {
@@ -122,9 +115,21 @@ public class MeetingActionsService implements MeetingService {
                 }
             }
         }
+
         meetingsEntity.setMembers(resultMembers);
         meetingsEntity.setStatus("Active");
         meetingRepository.save(meetingsEntity);
+    }
+
+    private MeetingsEntity getMeetingsEntity(String meeting, List<MeetingsEntity> meetings) {
+        MeetingsEntity meetingsEntity = new MeetingsEntity();
+        for (MeetingsEntity membersQuery : meetings) {
+            if (membersQuery.getMeeting().equalsIgnoreCase(meeting)) {
+                meetingsEntity = membersQuery;
+                break;
+            }
+        }
+        return meetingsEntity;
     }
 
 
