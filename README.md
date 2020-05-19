@@ -3,12 +3,13 @@
 
 
 http://localhost:8100//meeting/add?meeting=meeting08&date=January 1, 1970, 00:00:00
-Добавляет встречу в базу данных
+Добавляет встречу в базу данных. Имена митингов уникальны.
+Нельзя создать два митинга с одинаковым именем
 
 
 http://localhost:8100/show
 Показывает все встречи с их участниками 
-Добавляет встречу в базу данных
+
 
 http://localhost:8100/member/add/to/meeting?meeting=meeting02&members=vova&members=vika
 Добавляет людей к встрече. 
@@ -24,6 +25,7 @@ http://localhost:8100/member/delete?meeting=meeting02&name=vlad31231
 http://localhost:8100/member/add/to/database?name=vlad&email=vlad@mail.ru
 Все имена уникальны.
 Добавляет в базу данных человека, проверят его валидность. 
+Если валидация не проходит, выдается сообщение об ошибке. 
 По способу добавления в базу данных  можно сказать что в базе будут только валидные пользователи.
 
 
