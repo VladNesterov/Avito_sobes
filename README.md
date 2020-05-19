@@ -7,18 +7,8 @@ http://localhost:8100//meeting/add?meeting=meeting08&date=January 1, 1970, 00:00
 
 
 http://localhost:8100/show
-Показывает все встречи с их учатснhttp://localhost:8100//meeting/add?meeting=meeting08&date=January 1, 1970, 00:00:00
+Показывает все встречи с их участниками 
 Добавляет встречу в базу данных
-
-
-http://localhost:8100/show
-Показывает все встречи и их участников 
-
-
-http://localhost:8100/member/add/to/database?name=vlad&email=vlad@mail.ru
-Добавляет в базу данных человека, проверят его валидность. 
-По способу добавления в базу данных  можно сказать что в базе будут только валидные пользователи.
-
 
 http://localhost:8100/member/add/to/meeting?meeting=meeting02&members=vova&members=vika
 Добавляет людей к встрече. 
@@ -41,8 +31,3 @@ http://localhost:8100/member/add/to/meeting?meeting=meeting02&members=vova&membe
 Добавляет людей к встрече. 
 Если встречи не существует и вы попытаетесь добавить ее добавить выведется соответствующее сообщение.
 
-
-http://localhost:8100/member/delete?meeting=meeting02&name=vlad31231
-Удаляет человека со встречи. 
-При попытке удалить человека не включенного в собрание появится сообщение, 
-что нельзя удалить такого человека так как его нет 
