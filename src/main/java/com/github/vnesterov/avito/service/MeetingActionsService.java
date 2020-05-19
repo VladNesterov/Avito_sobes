@@ -100,7 +100,7 @@ public class MeetingActionsService implements MeetingService {
     }
 
     @Override
-    public void deleteMembersFromMeetings(String meeting, List<String> nameMembers) {
+    public String deleteMembersFromMeetings(String meeting, String nameMembers) {
         List<MembersEntity> members = memberRepository.findAll();
         List<MeetingsEntity> meetings = meetingRepository.findAll();
 
@@ -109,16 +109,20 @@ public class MeetingActionsService implements MeetingService {
         MeetingsEntity meetingsEntity = getMeetingsEntity(meeting, meetings);
 
         for (MembersEntity membersQuery : members) {
-            for (int i = 0; i < nameMembers.size(); i++) {
-                if (!membersQuery.getNamePerson().equalsIgnoreCase(nameMembers.get(i))) {
-                    resultMembers.add(membersQuery);
-                }
+            if (!membersQuery.getNamePerson().equalsIgnoreCase(nameMembers)) {
+                resultMembers.add(membersQuery);
+
             }
         }
+        String response;
+        if (meetingsEntity.getMembers().size() == resultMembers.size()) {
+            response = "Can't delete this person, because he dose not exist";
+        } else response = "Member was deleted";
 
         meetingsEntity.setMembers(resultMembers);
         meetingsEntity.setStatus("Active");
         meetingRepository.save(meetingsEntity);
+        return response;
     }
 
     private MeetingsEntity getMeetingsEntity(String meeting, List<MeetingsEntity> meetings) {

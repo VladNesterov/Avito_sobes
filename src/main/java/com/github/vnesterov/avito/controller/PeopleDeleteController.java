@@ -20,8 +20,8 @@ public class PeopleDeleteController {
     }
 
     @RequestMapping(value = "/member/delete", method = RequestMethod.POST)
-    public void deletePerson(String meeting, @RequestParam List<String> name) {
-        meetingService.deleteMembersFromMeetings(meeting, name);
+    public String deletePerson(String meeting, @RequestParam String name) {
+       return meetingService.deleteMembersFromMeetings(meeting, name);
     }
 
 }

@@ -14,5 +14,5 @@ public interface MeetingService {
 
     String addMembersToMeetings(String meeting, List<String> nameMembers);
 
-    void deleteMembersFromMeetings(String meeting, List<String> nameMembers);
+    String deleteMembersFromMeetings(String meeting, String nameMembers);
 }
