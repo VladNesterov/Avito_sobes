@@ -19,7 +19,7 @@ public class MeetingAddController {
         this.meetingService = meetingService;
     }
 
-    @RequestMapping(value = "/meeting/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/meeting/add", method = RequestMethod.POST)
     public String meetingAdd(@RequestParam String meeting, @RequestParam Date date) {
         return meetingService.addMeetings(meeting, date);
     }

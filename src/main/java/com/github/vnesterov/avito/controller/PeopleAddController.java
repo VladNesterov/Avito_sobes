@@ -17,7 +17,7 @@ public class PeopleAddController {
     }
 
 
-    @RequestMapping(value = "member/add")
+    @RequestMapping(value = "/member/add/to/meeting",  method = RequestMethod.POST)
     public void create(@RequestParam String meeting, @RequestParam List<String> members) {
         meetingService.addMembersToMeetings(meeting, members);
     }

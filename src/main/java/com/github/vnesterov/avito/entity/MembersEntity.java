@@ -26,9 +26,6 @@ public class MembersEntity {
     @JoinColumn(name = "meetingsEntity_id")
     private List<MeetingsEntity> meetings;
 
-
-
-
     public static MembersDto toDto(MembersEntity membersEntity) {
         MembersDto result = new MembersDto();
         result.setId(membersEntity.getId());

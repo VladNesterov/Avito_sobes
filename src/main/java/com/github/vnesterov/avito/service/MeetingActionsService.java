@@ -26,18 +26,13 @@ public class MeetingActionsService implements MeetingService {
     }
 
     public List<MeetingDto> showMeetings() {
-        List<MeetingDto> result = new ArrayList<>();
         List<MeetingsEntity> meetings = meetingRepository.findAll();
-        for (MeetingsEntity meetingsEntity01 : meetings) {
-            MeetingDto meetingDto = new MeetingDto();
-            meetingDto.setId(meetingsEntity01.getId());
-            meetingDto.setDate(meetingsEntity01.getDate());
-            meetingDto.setMeeting(meetingsEntity01.getMeeting());
-            meetingDto.setStatus(meetingsEntity01.getStatus());
-            meetingDto.setMembers(meetingsEntity01.getMembers());
-            result.add(meetingDto);
+        List<MeetingDto> meetingDto = new ArrayList<>();
+
+        for (MeetingsEntity meetingsEntityFromDataBase : meetings) {
+            meetingDto.add(MeetingsEntity.toDto(meetingsEntityFromDataBase));
         }
-        return result;
+        return meetingDto;
     }
 
     public String cancelMeetings(String meeting) {
@@ -60,6 +55,14 @@ public class MeetingActionsService implements MeetingService {
     }
 
     public String addMeetings(String meeting, Date date) {
+        List<MeetingsEntity> meetings = meetingRepository.findAll();
+        List<MeetingDto> meetingDto = new ArrayList<>();
+
+        for (MeetingsEntity meetingsEntityFromDataBase : meetings) {
+            if (meetingsEntityFromDataBase.getMeeting().equalsIgnoreCase(meeting)) {
+                return "Meeting was not added, because a such meeting already exists";
+            }
+        }
         MeetingsEntity entity = new MeetingsEntity();
         entity.setMeeting(meeting);
         entity.setDate(date);
@@ -88,10 +91,42 @@ public class MeetingActionsService implements MeetingService {
             for (int i = 0; i < nameMembers.size(); i++) {
                 if (membersQuery.getNamePerson().equalsIgnoreCase(nameMembers.get(i))) {
                     resultMembers.add(membersQuery);
+
                 }
             }
         }
         meetingsEntity.setMembers(resultMembers);
+        meetingsEntity.setStatus("Active");
         meetingRepository.save(meetingsEntity);
     }
+
+    @Override
+    public void deleteMembersFromMeetings(String meeting, List<String> nameMembers) {
+        List<MembersEntity> members = memberRepository.findAll();
+        List<MeetingsEntity> meetings = meetingRepository.findAll();
+
+        List<MembersEntity> resultMembers = new ArrayList<>();
+
+        MeetingsEntity meetingsEntity = new MeetingsEntity();
+        for (MeetingsEntity membersQuery : meetings) {
+            if (membersQuery.getMeeting().equalsIgnoreCase(meeting)) {
+                meetingsEntity = membersQuery;
+                break;
+            }
+        }
+
+        for (MembersEntity membersQuery : members) {
+            for (int i = 0; i < nameMembers.size(); i++) {
+                if (!membersQuery.getNamePerson().equalsIgnoreCase(nameMembers.get(i))) {
+                    resultMembers.add(membersQuery);
+                }
+            }
+        }
+        meetingsEntity.setMembers(resultMembers);
+        meetingsEntity.setStatus("Active");
+        meetingRepository.save(meetingsEntity);
+    }
+
+
 }
+

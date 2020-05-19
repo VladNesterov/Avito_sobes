@@ -1,6 +1,7 @@
 package com.github.vnesterov.avito.controller;
 
 import com.github.vnesterov.avito.dto.MeetingDto;
+import com.github.vnesterov.avito.entity.MeetingsEntity;
 import com.github.vnesterov.avito.repository.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ public class MeetingShowController {
         this.meetingService = meetingService;
     }
 
-    @RequestMapping(value = "/show", method = RequestMethod.GET)
+    @RequestMapping(value = "/show", method = RequestMethod.POST)
     public List<MeetingDto> show() {
         return meetingService.showMeetings();
     }

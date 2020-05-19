@@ -1,9 +1,7 @@
 package com.github.vnesterov.avito.repository;
 
-import java.util.List;
 
 public interface MemberService {
-    void add(String meeting, String name);
+    void add(String name, String email);
 
-    void delete(String meeting, List<String> name);
 }
