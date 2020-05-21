@@ -1,35 +1,48 @@
+## Запуск
 При помощи программы postman  создаем HTTP POST запросы описанные ниже.
 Предварительно нужно добавить участников и встречи в базу данных при помощи запросов.
 
-
-http://localhost:8100//meeting/add?meeting=meeting08&date=January 1, 1970, 00:00:00
+## Методы API
+PUT /meeting/add
+    ?meeting=meeting08
+    &date=January 1, 1970, 00:00:00
 Добавляет встречу в базу данных. Имена митингов уникальны.
 Нельзя создать два митинга с одинаковым именем
 
 
-http://localhost:8100/show
+PUT /show
 Показывает все встречи с их участниками 
 
 
-http://localhost:8100/member/add/to/meeting?meeting=meeting02&members=vova&members=vika
+PUT /member/add/to/meeting
+    ?meeting=meeting02
+    &members=vova
+    &members=vika
 Добавляет людей к встрече. 
 Если встречи не существует и вы попытаетесь добавить ее, выведется сообщение об ошибке.
 
 
-http://localhost:8100/member/delete?meeting=meeting02&name=vlad31231
+PUT /member/delete
+    ?meeting=meeting02
+    &name=vlad31231
 Удаляет человека со встречи. 
 При попытке удалить человека не включенного в собрание появится сообщение, 
 что нельзя удалить такого человека, так как он не состоит в данном собрании.
 
 
-http://localhost:8100/member/add/to/database?name=vlad&email=vlad@mail.ru
+PUT /member/add/to/database
+    ?name=vlad
+    &email=vlad@mail.ru
 Все имена уникальны.
 Добавляет в базу данных человека, проверят его валидность. 
 Если валидация не проходит, выдается сообщение об ошибке. 
 По способу добавления в базу данных  можно сказать, что в базе будут только валидные пользователи.
 
 
-http://localhost:8100/member/add/to/meeting?meeting=meeting02&members=vova&members=vika
+PUT /member/add/to/meeting
+    ?meeting=meeting02
+    &members=vova
+    &members=vika
 Добавляет людей к встрече. 
 Если встречи не существует и вы попытаетесь добавить в нее человека, выведется сообщение об ошибке.
 
