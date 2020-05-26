@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 public class MemberActionService implements MemberService {
 
     private final MemberRepository memberRepository;
+    private static final Pattern pattern = Pattern
+            .compile("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
 
     @Autowired
     public MemberActionService(MemberRepository memberRepository) {
@@ -24,8 +26,6 @@ public class MemberActionService implements MemberService {
 
     @Override
     public String add(String name, String email) {
-        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
             return "wrong Email";

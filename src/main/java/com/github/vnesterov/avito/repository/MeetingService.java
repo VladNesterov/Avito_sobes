@@ -8,7 +8,7 @@ import java.util.List;
 public interface MeetingService {
     List<MeetingDto> showMeetings();
 
-    String cancelMeetings(String meeting);
+    void cancelMeetings(String meeting);
 
     String addMeetings(String meeting, Date date);
 

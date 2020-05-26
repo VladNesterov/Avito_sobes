@@ -19,7 +19,7 @@ public class MeetingCancelController {
 
 
     @RequestMapping(value = "/meeting/cancel",  method = RequestMethod.POST)
-    public String cancel(@RequestParam String meeting) {
-        return meetingService.cancelMeetings(meeting);
+    public void cancel(@RequestParam String meeting) {
+         meetingService.cancelMeetings(meeting);
     }
 }

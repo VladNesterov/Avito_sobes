@@ -6,10 +6,12 @@ import com.github.vnesterov.avito.entity.MembersEntity;
 import com.github.vnesterov.avito.repository.MeetingRepository;
 import com.github.vnesterov.avito.repository.MeetingService;
 import com.github.vnesterov.avito.repository.MemberRepository;
+import jdk.internal.jline.internal.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,23 +37,15 @@ public class MeetingActionsService implements MeetingService {
         return meetingDto;
     }
 
-    public String cancelMeetings(String meeting) {
-        String message = "There isn't the same meeting";
-        List<MeetingsEntity> meetings = meetingRepository.findAll();
-        for (MeetingsEntity meetingsEntityFromDataBase : meetings) {
-            if (meetingsEntityFromDataBase.getMeeting().equalsIgnoreCase(meeting)) {
-                MeetingsEntity entity = new MeetingsEntity();
-                entity.setId(meetingsEntityFromDataBase.getId());
-                entity.setMeeting(meetingsEntityFromDataBase.getMeeting());
-                entity.setDate(meetingsEntityFromDataBase.getDate());
-                entity.setStatus("Inactive");
-                entity.setMembers(null);
-                meetingRepository.save(entity);
-                message = "Meeting was canceled";
-                return message;
-            }
+
+    public void cancelMeetings(String meetingName) {
+        MeetingsEntity meeting = meetingRepository.findByMeeting(meetingName);
+        if (meeting == null) {
+            return;
         }
-        return message;
+        meeting.setStatus("Inactive");
+        meeting.setMembers(Collections.emptyList());
+        meetingRepository.save(meeting);
     }
 
     public String addMeetings(String meeting, Date date) {
