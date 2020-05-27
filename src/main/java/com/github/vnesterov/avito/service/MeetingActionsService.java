@@ -48,7 +48,10 @@ public class MeetingActionsService implements MeetingService {
     }
 
     public void addMeetings(String meetingName, Date date) {
-
+        MeetingsEntity meeting = meetingRepository.findByMeeting(meetingName);
+        if (meeting != null) {
+            throw new NullPointerException("This meeting already exist " + meetingName);
+        }
         MeetingsEntity entity = new MeetingsEntity();
         entity.setMeeting(meetingName);
         entity.setDate(date);
