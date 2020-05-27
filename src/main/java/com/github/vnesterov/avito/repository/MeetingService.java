@@ -6,13 +6,15 @@ import java.util.Date;
 import java.util.List;
 
 public interface MeetingService {
+
     List<MeetingDto> showMeetings();
 
     void cancelMeetings(String meeting);
 
-    String addMeetings(String meeting, Date date);
+    void addMeetings(String meeting, Date date);
 
-    String addMembersToMeetings(String meeting, List<String> nameMembers);
+    void addMembersToMeetings(String meeting, List<String> nameMembers);
 
-    String deleteMembersFromMeetings(String meeting, String nameMembers);
+    void deleteMembersFromMeetings(String meeting, String nameMembers);
+
 }

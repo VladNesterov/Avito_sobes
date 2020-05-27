@@ -20,7 +20,7 @@ public class MeetingsEntity {
     @Nullable
     private long id;
 
-    @Column(name = "meeting", nullable = false)
+    @Column(name = "meeting", nullable = false, unique = true)
     private String meeting;
 
     @Column(name = "date", nullable = false)
@@ -46,7 +46,7 @@ public class MeetingsEntity {
             membersDto.setEmail(membersEntity.get(i).getEmail());
             membersDto.setNamePerson(membersEntity.get(i).getNamePerson());
             membersDto.setId(membersEntity.get(i).getId());
-             membersDtoResult.add(membersDto);
+            membersDtoResult.add(membersDto);
         }
 
         MeetingDto result = new MeetingDto();

@@ -1,5 +1,6 @@
 package com.github.vnesterov.avito.service;
 
+import com.github.vnesterov.avito.entity.MeetingsEntity;
 import com.github.vnesterov.avito.entity.MembersEntity;
 import com.github.vnesterov.avito.repository.MemberRepository;
 import com.github.vnesterov.avito.repository.MemberService;
@@ -25,24 +26,20 @@ public class MemberActionService implements MemberService {
 
 
     @Override
-    public String add(String name, String email) {
+    public void add(String memberName, String email) {
+        MembersEntity member = memberRepository.findByMember(memberName);
+        if (member != null) {
+            throw new RuntimeException("This members already exist");
+        }
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
-            return "wrong Email";
+            throw new RuntimeException("wrong Email");
         }
-        System.out.println(email + " : " + matcher.matches());
         MembersEntity membersEntity = new MembersEntity();
         membersEntity.setEmail(email);
-        membersEntity.setNamePerson(name);
-        List<MembersEntity> members = memberRepository.findAll();
-        for (MembersEntity membersEntity1 : members) {
-            if (membersEntity1.getNamePerson().equalsIgnoreCase(name)) {
-                return "This person already exist";
-            }
+        membersEntity.setNamePerson(memberName);
 
-        }
         memberRepository.save(membersEntity);
-        return "Person was added to data base";
     }
 }
 

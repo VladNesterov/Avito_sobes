@@ -6,7 +6,6 @@ import com.github.vnesterov.avito.entity.MembersEntity;
 import com.github.vnesterov.avito.repository.MeetingRepository;
 import com.github.vnesterov.avito.repository.MeetingService;
 import com.github.vnesterov.avito.repository.MemberRepository;
-import jdk.internal.jline.internal.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,83 +47,51 @@ public class MeetingActionsService implements MeetingService {
         meetingRepository.save(meeting);
     }
 
-    public String addMeetings(String meeting, Date date) {
-        List<MeetingsEntity> meetings = meetingRepository.findAll();
-        for (MeetingsEntity meetingsEntityFromDataBase : meetings) {
-            if (meetingsEntityFromDataBase.getMeeting().equalsIgnoreCase(meeting)) {
-                return "Meeting was not added, because a such meeting already exists";
-            }
-        }
+    public void addMeetings(String meetingName, Date date) {
+
         MeetingsEntity entity = new MeetingsEntity();
-        entity.setMeeting(meeting);
+        entity.setMeeting(meetingName);
         entity.setDate(date);
         entity.setStatus("Active");
         meetingRepository.save(entity);
-        return "Meeting was added ";
     }
 
     @Override
-    public String addMembersToMeetings(String meeting, List<String> nameMembers) {
-        List<MembersEntity> members = memberRepository.findAll();
-        List<MeetingsEntity> meetings = meetingRepository.findAll();
-        List<MembersEntity> resultMembers = new ArrayList<>();
-
-        MeetingsEntity meetingsEntity = getMeetingsEntity(meeting, meetings);
-
-        resultMembers = meetingsEntity.getMembers();
-        try {
-            for (MembersEntity membersQuery : members) {
-                for (int i = 0; i < nameMembers.size(); i++) {
-                    if (membersQuery.getNamePerson().equalsIgnoreCase(nameMembers.get(i))) {
-                        resultMembers.add(membersQuery);
-                    }
-                }
-            }
-        } catch (NullPointerException e) {
-            return "You have to create meeting and then add members to it";
+    public void addMembersToMeetings(String meetingName, List<String> nameMembers) {
+        MeetingsEntity meeting = meetingRepository.findByMeeting(meetingName);
+        if (meeting == null) {
+            throw new NullPointerException("This meeting does not exist " + meetingName);
         }
+        List<MembersEntity> resultMembers = new ArrayList<>();
+        List<String> membersDoesNotExistInDataBase = new ArrayList<>();
 
-        meetingsEntity.setMembers(resultMembers);
-        meetingsEntity.setStatus("Active");
-        meetingRepository.save(meetingsEntity);
-        return "Members was added to meeting";
+        for (String nameMember : nameMembers) {
+            MembersEntity member = memberRepository.findByMember(nameMember);
+            if (member == null) {
+                membersDoesNotExistInDataBase.add(nameMember);
+            } else resultMembers.add(member);
+        }
+        for (MembersEntity resultMember : resultMembers) {
+            meeting.getMembers().add(resultMember);
+        }
+        meetingRepository.save(meeting);
+        if (membersDoesNotExistInDataBase.size() > 0) {
+            throw new RuntimeException("This members does not exist in database: " + membersDoesNotExistInDataBase);
+        }
     }
 
     @Override
-    public String deleteMembersFromMeetings(String meeting, String nameMembers) {
-        List<MembersEntity> members = memberRepository.findAll();
-        List<MeetingsEntity> meetings = meetingRepository.findAll();
-
-        List<MembersEntity> resultMembers = new ArrayList<>();
-
-        MeetingsEntity meetingsEntity = getMeetingsEntity(meeting, meetings);
-
-        for (MembersEntity membersQuery : meetingsEntity.getMembers()) {
-            if (!membersQuery.getNamePerson().equalsIgnoreCase(nameMembers)) {
-                resultMembers.add(membersQuery);
-
-            }
+    public void deleteMembersFromMeetings(String meetingName, String nameMember) {
+        MeetingsEntity meeting = meetingRepository.findByMeeting(meetingName);
+        if (meeting == null) {
+            throw new RuntimeException("This meeting does not exist " + meetingName);
         }
-        String response;
-        if (meetingsEntity.getMembers().size() == resultMembers.size()) {
-            response = "Can't delete this person, because he dose not exist";
-        } else response = "Member was deleted";
-
-        meetingsEntity.setMembers(resultMembers);
-        meetingsEntity.setStatus("Active");
-        meetingRepository.save(meetingsEntity);
-        return response;
-    }
-
-    private MeetingsEntity getMeetingsEntity(String meeting, List<MeetingsEntity> meetings) {
-        MeetingsEntity meetingsEntity = new MeetingsEntity();
-        for (MeetingsEntity membersQuery : meetings) {
-            if (membersQuery.getMeeting().equalsIgnoreCase(meeting)) {
-                meetingsEntity = membersQuery;
-                break;
-            }
+        if (meeting.getMembers().size() == 0) {
+            throw new RuntimeException("This meeting does not contain members");
         }
-        return meetingsEntity;
+        meeting.getMembers().removeIf(member -> member.getNamePerson().equalsIgnoreCase(nameMember));
+
+        meetingRepository.save(meeting);
     }
 
 }
